@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: mehedi
- * Date: 1/2/17
- * Time: 6:54 PM
- */
 class DB
 {
     private static $_instance = null;
@@ -19,7 +13,7 @@ class DB
     private function __construct()
     {
         try{
-            $this->_pdo = new PDO('mysql:host = ' . Config::get('mysql/host') . ';dbname = ' . Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'));
+            $this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' .Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'));
 
         }catch (PDOException $e){
             die($e->getMessage());
@@ -47,13 +41,66 @@ class DB
                     $x++;
                 }
             }
-            var_dump($this->_query);
-            echo "<br> $x";
 
             if ($this->_query->execute()){
-                echo "success.";
+                $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
+                $this->_count = $this->_query->rowCount();
+            }else {
+                $this->_error = true;
             }
 
         }
+        return $this;
     }
+
+    public function action($action, $table, $where = array())
+    {
+        if (count($where) === 3) {
+            $opetators = array('=', '>', '<', '>=', '<=');
+
+            $field     = $where[0];
+            $operator  = $where[1];
+            $value     = $where[2];
+
+            if (in_array($operator, $opetators)) {
+                $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
+
+                if (!$this->query($sql, array($value))->error()) {
+                    return $this;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function get($table, $where)
+    {
+        return $this->action('SELECT *', $table, $where);
+    }
+
+    public function delete($table, $where)
+    {
+        return $this->action('DELETE', $table, $where);
+    }
+
+    public function results()
+    {
+        return $this->_results;
+    }
+
+    public function firstResult()
+    {
+        return $this->_results[0];
+    }
+
+    public function error()
+    {
+        return $this->_error;
+    }
+
+    public function count()
+    {
+        return $this->_count;
+    }
+
 }

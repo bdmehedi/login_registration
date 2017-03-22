@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: mehedi
- * Date: 1/2/17
- * Time: 6:53 PM
- */
 class Config
 {
     public static function get($path = null)
@@ -19,8 +13,9 @@ class Config
                     $config = $config[$bit];
                 }
             }
-
-            return $config;
+            if (!is_array($config)) {
+                return $config;
+            }
         }
 
         return false;
