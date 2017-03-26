@@ -9,7 +9,6 @@ class DB
             $_results,
             $_count = 0;
 
-
     private function __construct()
     {
         try{
@@ -19,7 +18,6 @@ class DB
             die($e->getMessage());
         }
     }
-
 
     public function getInstance(){
         if (!isset(self::$_instance)){
@@ -81,6 +79,30 @@ class DB
     public function delete($table, $where)
     {
         return $this->action('DELETE', $table, $where);
+    }
+
+    public function insert($table, $fields = array())
+    {
+        if (count($fields)) {
+            $keys = array_keys($fields);
+            $values = null;
+            $x = 1;
+
+            foreach ($fields as $field) {
+                $values .= '?';
+                if ($x < count($fields)) {
+                    $values .= ', ';
+                }
+                $x++;
+            }
+
+            $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES ({$values})";
+            
+            if (!$this->query($sql, $fields)->error()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function results()
