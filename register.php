@@ -1,7 +1,7 @@
 <?php 
 require_once('core/init.php');
 if (Input::exists()) {
-	$validate = new Validation();
+	$validate = new Validate();
 	$validation = $validate->check($_POST, array(
 		'username' => array(
 			'required' => true,
@@ -25,9 +25,11 @@ if (Input::exists()) {
 		));
 
 	if ($validate->passed()) {
-		# register user.
+		echo "Passed";
 	}else {
-		# output errors........
+		foreach ($validate->errors() as $error) {
+			echo $error . '<br>';
+		}
 	}
 }
  ?>
@@ -50,7 +52,7 @@ if (Input::exists()) {
 		<form action="" method="post">
 			<div class="field">
 				<label for="username">Username</label>
-				<input type="text" name="username" id="username" value="" autocomplete="off">
+				<input type="text" name="username" id="username" value="<?php echo escape(Input::get('username')); ?>" autocomplete="off">
 			</div><br>
 			<div class="field">
 				<label for="password">Password</label>
@@ -58,11 +60,11 @@ if (Input::exists()) {
 			</div><br>
 			<div class="field">
 				<label for="password_again">Repeate Password</label>
-				<input type="password_again" name="password_again" id="password_again">
+				<input type="password" name="password_again" id="password_again">
 			</div><br>
 			<div class="field">
 				<label for="name">Name</label>
-				<input type="text" name="name" id="name" value="" autocomplete="off">
+				<input type="text" name="name" id="name" value="<?php echo escape(Input::get('name')); ?>" autocomplete="off">
 			</div><br>
 			<div class="field">
 				<input type="submit" value="Register">

@@ -1,7 +1,7 @@
 <?php
 function escape($string){
-	$_string = filter_id($string, FILTER_SANITIZE_STRING);
-	$_string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-    return $_string;
+	$string = filter_var($string, FILTER_SANITIZE_STRING);
+	$string = htmlentities($string, ENT_QUOTES, 'UTF-8');
+    return $string;
 }
 
