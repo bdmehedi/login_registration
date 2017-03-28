@@ -7,9 +7,9 @@ class Hash
         return hash('sha256', $string.$salt);
     }
 
-    public static function salt($length)
+    public static function salt($length = null)
     {
-        return random_bytes($length);
+        return md5(uniqid());
     }
 
     public static function unique()

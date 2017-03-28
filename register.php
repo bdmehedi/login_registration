@@ -29,10 +29,11 @@ if (Input::exists()) {
 
 		if ($validate->passed()) {
 			$user = new User();
-			$salt = Hash::salt(32);
+			$salt = Hash::salt();
 
 			try {
-
+				echo Hash::make(Input::get('password'), $salt), '<br>';
+				echo Hash::make(123456, $salt), '<br>'; //exit();
 			    $user->create(array(
 			            'username' => Input::get('username'),
 			            'password' => Hash::make(Input::get('password'), $salt),
@@ -43,7 +44,7 @@ if (Input::exists()) {
                 ));
 
 			    Session::flash('home', 'You have been registered and can now login !');
-			    Redirect::to(404);
+			    Redirect::to('index.php');
 
             } catch (Exception $e){
 			    die($e->getMessage());

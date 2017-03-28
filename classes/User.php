@@ -69,7 +69,7 @@ class User
             $user = $this->find($username);
 
             if ($user){
-                if ($this->data()->password === Hash::make($password, $this->data()->salt)){
+                if ($this->data()->password == Hash::make($password, $this->data()->salt)){
                     Session::put($this->_sessionName, $this->data()->id);
 
                     if ($remember){
@@ -90,6 +90,20 @@ class User
 
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    public function hasPermission($key)
+    {
+        $group = $this->_db->get('groups', array('id', '=', $this->data()->group));
+        if ($group->count()) {
+            $permissions = json_decode($group->firstResult()->permissions, true);
+
+            if ($permissions[$key] == true) {
+                return true;
             }
         }
 

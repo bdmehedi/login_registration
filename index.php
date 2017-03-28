@@ -19,6 +19,11 @@ if ($user->isLoggedIn()){
     </ul>
 
 <?php
+
+if ($user->hasPermission('admin')) {
+	echo "You are Administrator !";
+}
+
 }else{
 ?>
 
