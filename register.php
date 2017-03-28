@@ -28,7 +28,26 @@ if (Input::exists()) {
 			));
 
 		if ($validate->passed()) {
-			echo "Passed";
+			$user = new User();
+			$salt = Hash::salt(32);
+
+			try {
+
+			    $user->create(array(
+			            'username' => Input::get('username'),
+			            'password' => Hash::make(Input::get('password'), $salt),
+			            'salt' => $salt,
+			            'name' => Input::get('name'),
+			            'joined' => date('Y-m-d h:m:s'),
+			            'group' => 1,
+                ));
+
+			    Session::flash('home', 'You have been registered and can now login !');
+			    Redirect::to(404);
+
+            } catch (Exception $e){
+			    die($e->getMessage());
+            }
 		}else {
 			foreach ($validate->errors() as $error) {
 				echo $error . '<br>';

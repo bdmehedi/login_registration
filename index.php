@@ -1,17 +1,28 @@
 <?php
 require_once "core/init.php";
 
-//echo Config::get('mysql/password');
-// $insertSuccess = DB::getInstance()->update('users', 27, array(
-// 	'username' => 'omi',
-// 	'password' => 'newpassword',
-// 	'salt' => 'salt',
-// 	'name' => 'Omi Hassan',
-// 	'joined' => date('Y-m-d h:m:s')
-// 	));
+if (Session::exists('home')){
+    echo '<p>'.Session::flash('home').'</p>';
+}
 
-// if ($insertSuccess) {
-// 	echo "Success !";
-// }else {
-// 	echo "Faild !";
-// }
+
+$user = new User();
+if ($user->isLoggedIn()){
+?>
+
+    <p>Hello <a href="#"><?php echo $user->data()->username; ?></a></p>
+
+    <ul>
+        <li><a href="logout.php">Log out</a></li> <br>
+        <li><a href="update.php">Update</a></li>
+        <li><a href="changepassword.php">Change Password</a></li>
+    </ul>
+
+<?php
+}else{
+?>
+
+    <p>You need to <a href="login.php">login</a> or <a href="register.php">register</a></p>
+
+<?php
+}
