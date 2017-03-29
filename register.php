@@ -29,7 +29,7 @@ if (Input::exists()) {
 
 		if ($validate->passed()) {
 			$user = new User();
-			$salt = Hash::salt();
+			$salt = Hash::salt(32);
 
 			try {
 				echo Hash::make(Input::get('password'), $salt), '<br>';
